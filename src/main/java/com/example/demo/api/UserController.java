@@ -15,8 +15,8 @@ public class UserController {
 
   @ResponseBody
   @GetMapping
-  public void login() {
-    ;
+  public String login() {
+    return "Hello, World";
   }
 
   @ResponseBody
