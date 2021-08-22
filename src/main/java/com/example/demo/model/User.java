@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity // This tells Hibernate to make a table out of this class
 @Table(name = "users")
 public class User {
@@ -18,6 +20,14 @@ public class User {
   private String email;
 
   private String password;
+
+  public User(@JsonProperty("name") String name,
+              @JsonProperty("email") String em,
+              @JsonProperty("hashedPassword") pwd) {
+    this.name = name;
+    this.email = email;
+    this.password = pwd;
+  }
 
   public Integer getId() {
     return id;

@@ -39,7 +39,7 @@ public class UserController {
     ObjectNode json = mapper.createObjectNode();
     final String namePattern = "^([a-zA-Z0-9_-]{1,63})$";
     final String pwdPattern = "[A-Fa-f0-9]{64}";
-    if (Pattern.matches(namePattern, hashedPassword) != true) {
+    if (Pattern.matches(namePattern, nameOrEmail) != true) {
       json.put("success", false);
       json.put("message", "invalid name");
     }
@@ -60,13 +60,28 @@ public class UserController {
 
   @ResponseBody
   @PostMapping
-  public void register() {
-    ;
+  public void register(String name, String email, String hashedPassword) {
+    ObjectNode json = mapper.createObjectNode();
+    final String namePattern = "^([a-zA-Z0-9_-]{1,63})$";
+    final String pwdPattern = "[A-Fa-f0-9]{64}";
+    if (Pattern.matches(namePattern, name) != true) {
+      json.put("success", false);
+      json.put("message", "invalid name");
+    }
+    if (Pattern.matches(pwdPattern, hashedPassword) != true) {
+      json.put("success", false);
+      json.put("message", "invalid hashedPassword");
+    }
   }
 
   @ResponseBody
   @PostMapping("/changepassword")
   public void changePassword() {
-    ;
+    ObjectNode json = mapper.createObjectNode(); 
+    final String pwdPattern = "[A-Fa-f0-9]{64}";
+    if (Pattern.matches(pwdPattern, hashedPassword) != true) {
+      json.put("success", false);
+      json.put("message", "invalid hashedPassword");
+    }
   }
 }
