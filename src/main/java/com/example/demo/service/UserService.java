@@ -1,7 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.dao.UserDao;
+import com.example.demo.dao.UserRepository;
 import com.example.demo.model.User;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 // enum UserOpStatus {
 //   SUCCESS,
@@ -13,18 +16,26 @@ import com.example.demo.model.User;
 //   WRONG_PWD
 // }
 
-
+@Service
 public class UserService {
-  private final UserDao userDao;
-  UserService(UserDao userDao) {
+  private UserRepository userDao;
+
+  @Autowired
+  public UserService(UserRepository userDao) {
     this.userDao = userDao;
   }
+
   public User getUser(String nameOrEmail, String pwd, int mode) {
-    /** 
-    /* @param 
-      
-    */
-    return new User();
+    User user;
+    if (mode == 0) {
+      user = userDao.findByName(nameOrEmail);
+    } else {
+      user = userDao.findByEmail(nameOrEmail);
+    }
+    if (user.getPassword() != pwd) {
+      return null;
+    }
+    return user;
   }
   public boolean createUser(String name, String Email, String pwd) {
     return true;

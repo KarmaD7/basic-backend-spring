@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,25 +10,20 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity // This tells Hibernate to make a table out of this class
-@Table(name = "users")
+@Table(name = "User")
 public class User {
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Integer id;
 
+  @Column(name = "name", unique = true, nullable = false)
   private String name;
-
+  
+  @Column(name = "email", unique = true, nullable = false)
   private String email;
-
+  
+  @Column(name = "password", nullable = false)
   private String password;
-
-  public User(@JsonProperty("name") String name,
-              @JsonProperty("email") String em,
-              @JsonProperty("hashedPassword") pwd) {
-    this.name = name;
-    this.email = email;
-    this.password = pwd;
-  }
 
   public Integer getId() {
     return id;

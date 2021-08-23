@@ -24,11 +24,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/accounts")
 @Controller
 public class UserController {
-  private final UserService userService;
+  private UserService userService;
 
-  UserController(UserService userService) {
+  @Autowired
+  public UserController(UserService userService) {
     this.userService = userService;
   }
+
   @Autowired
   private ObjectMapper mapper;
 
@@ -76,10 +78,10 @@ public class UserController {
 
   @ResponseBody
   @PostMapping("/changepassword")
-  public void changePassword() {
+  public void changePassword(String oldpwd, String newpwd) {
     ObjectNode json = mapper.createObjectNode(); 
     final String pwdPattern = "[A-Fa-f0-9]{64}";
-    if (Pattern.matches(pwdPattern, hashedPassword) != true) {
+    if (Pattern.matches(pwdPattern, newpwd) != true) {
       json.put("success", false);
       json.put("message", "invalid hashedPassword");
     }
