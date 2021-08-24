@@ -72,12 +72,12 @@ public class UserController {
     json.put("id", user.getId());
     json.put("name", user.getName());
     json.put("email", user.getEmail());
-    // String cookieStr = "avaJ" + user.getId() + "cltczfdsf" + user.getId() + "tukey";
-    // String hashedStr = Hashing.sha256().newHasher().putString(cookieStr, Charsets.UTF_8).hash().toString();
-    // Cookie cookie = new Cookie("user", hashedStr);
-    // cookie.setMaxAge(7 * 24 * 3600); // 7 days 
-    // cookie.setHttpOnly(true);
-    // response.addCookie(cookie);
+    String cookieStr = "avaJ" + user.getId() + "cltczfdsf" + user.getId() + "tukey";
+    String hashedStr = Hashing.sha256().newHasher().putString(cookieStr, Charsets.UTF_8).hash().toString();
+    Cookie cookie = new Cookie("user", hashedStr);
+    cookie.setMaxAge(7 * 24 * 3600); // 7 days 
+    cookie.setHttpOnly(true);
+    response.addCookie(cookie);
     return json;
   }
 
