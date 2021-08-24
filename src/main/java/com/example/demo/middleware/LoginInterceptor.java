@@ -29,9 +29,12 @@ public class LoginInterceptor implements HandlerInterceptor {
 
   @Autowired
   static private ObjectMapper mapper;
-  
+
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    if(request.getContextPath() == "/account") {
+      return true;
+    }
     try {
       String _id = request.getParameter("id");
       Integer id = Integer.parseInt(_id);

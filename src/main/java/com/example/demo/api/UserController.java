@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@RequestMapping("/accounts")
+@RequestMapping("/account")
 @Controller
 public class UserController {
   private UserService userService;
@@ -77,6 +77,7 @@ public class UserController {
     Cookie cookie = new Cookie("user", hashedStr);
     cookie.setMaxAge(7 * 24 * 3600); // 7 days 
     cookie.setHttpOnly(true);
+    cookie.setPath("/");
     response.addCookie(cookie);
     return json;
   }
