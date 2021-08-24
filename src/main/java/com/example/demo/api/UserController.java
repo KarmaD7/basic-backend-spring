@@ -1,5 +1,6 @@
 package com.example.demo.api;
 
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,8 @@ import com.example.demo.service.UserService;
 import com.example.demo.utils.RegisterStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,7 +72,10 @@ public class UserController {
     json.put("id", user.getId());
     json.put("name", user.getName());
     json.put("email", user.getEmail());
-    Cookie cookie = new Cookie("user", "1"); 
+    String cookieStr = "avaJ" + user.getName() + "cltczfdsf" + user.getId() + "tukey";
+    String hashedStr = Hashing.sha256().newHasher().putString(cookieStr, Charsets.UTF_8).hash().toString();
+    Cookie cookie = new Cookie("user", hashedStr);
+    cookie.setMaxAge(7 * 24 * 3600); // 7 days 
     response.addCookie(cookie);
     return json;
   }
@@ -117,7 +123,7 @@ public class UserController {
 
   @ResponseBody
   @PostMapping("/changepassword")
-  public ObjectNode changePassword(String oldpwd, String newpwd) {
+  public ObjectNode changePassword(@RequestParam("id") int id, String oldpwd, String newpwd) {
     ObjectNode json = mapper.createObjectNode();
     final String pwdPattern = "[A-Fa-f0-9]{64}";
     if (Pattern.matches(pwdPattern, newpwd) != true) {
@@ -125,7 +131,6 @@ public class UserController {
       json.put("message", "invalid hashedPassword");
       return json;
     }
-    int id = 2; // decode cookie, todo
     boolean res = userService.changepassword(id, oldpwd, newpwd);
     if (res == false) {
       json.put("success", false);
