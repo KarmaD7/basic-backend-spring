@@ -2,19 +2,10 @@ package com.example.demo.service;
 
 import com.example.demo.dao.UserRepository;
 import com.example.demo.model.User;
+import com.example.demo.utils.RegisterStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-// enum UserOpStatus {
-//   SUCCESS,
-//   INVALID_NAME,
-//   INVALID_EMAIL,
-//   INVALID_PWD,
-//   WRONG_NAME,
-//   WRONG_EMAIL,
-//   WRONG_PWD
-// }
 
 @Service
 public class UserService {
@@ -28,19 +19,34 @@ public class UserService {
   public User getUser(String nameOrEmail, String pwd, int mode) {
     User user;
     if (mode == 0) {
-      user = userDao.findByName(nameOrEmail);
+      user = userDao.findByName(nameOrEmail).orElse(null);
     } else {
-      user = userDao.findByEmail(nameOrEmail);
+      user = userDao.findByEmail(nameOrEmail).orElse(null);
     }
-    if (user.getPassword() != pwd) {
+    if (user == null || !user.getPassword().equals(pwd)) {
       return null;
     }
     return user;
   }
-  public boolean createUser(String name, String Email, String pwd) {
-    return true;
+  public RegisterStatus createUser(String name, String email, String pwd) {
+    User user = new User(name, email, pwd);
+    User userByName = userDao.findByName(name).orElse(null);
+    System.out.println("debug: by name " + name);
+    if (userByName != null) {
+      return RegisterStatus.duplicated_name;
+    }    
+    User userByEmail = userDao.findByName(email).orElse(null);
+    if (userByEmail != null) {
+      return RegisterStatus.duplicated_email;
+    }    
+    userDao.save(user);
+    return RegisterStatus.success;
   }
-  public boolean changepassword(int id, String pwd) {
+  public boolean changepassword(int id, String oldpwd, String newpwd) {
+    User user = userDao.findById(id).orElse(null);
+    if (user == null) return false;
+    if (!user.getPassword().equals(oldpwd)) return false;
+    userDao.setUserPassword(id, newpwd);   
     return true;
   }
 
