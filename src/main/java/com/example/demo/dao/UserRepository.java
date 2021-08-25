@@ -2,6 +2,8 @@ package com.example.demo.dao;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import com.example.demo.model.User;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,6 +16,7 @@ public interface UserRepository extends CrudRepository<User, Integer>  {
   Optional<User> findByName(String name);
   Optional<User> findByEmail(String email);
 
+  @Transactional
   @Modifying
   @Query("update User u set u.password = ?2 where u.id = ?1")
   void setUserPassword(Integer id, String newpwd);

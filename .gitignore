@@ -88,3 +88,4 @@ secrets.yml
 
 pushall.sh
 secrets.json
+*.log

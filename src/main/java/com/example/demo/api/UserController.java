@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@RequestMapping("/accounts")
+@RequestMapping("/account")
 @Controller
 public class UserController {
   private UserService userService;
@@ -76,6 +76,8 @@ public class UserController {
     String hashedStr = Hashing.sha256().newHasher().putString(cookieStr, Charsets.UTF_8).hash().toString();
     Cookie cookie = new Cookie("user", hashedStr);
     cookie.setMaxAge(7 * 24 * 3600); // 7 days 
+    cookie.setHttpOnly(true);
+    cookie.setPath("/");
     response.addCookie(cookie);
     return json;
   }
@@ -123,8 +125,16 @@ public class UserController {
 
   @ResponseBody
   @PostMapping("/changepassword")
-  public ObjectNode changePassword(@RequestParam("id") int id, String oldpwd, String newpwd) {
+  public ObjectNode changePassword(HttpServletResponse response, @RequestBody ObjectNode req, @RequestParam("id") int id) {
+    var _oldpwd = req.get("original");
+    var _newpwd = req.get("updated");
     ObjectNode json = mapper.createObjectNode();
+    if (_oldpwd == null || _newpwd == null) {
+      response.setStatus(400);
+      return json;
+    }
+    String oldpwd = _oldpwd.asText();
+    String newpwd = _newpwd.asText();
     final String pwdPattern = "[A-Fa-f0-9]{64}";
     if (Pattern.matches(pwdPattern, newpwd) != true) {
       json.put("success", false);
