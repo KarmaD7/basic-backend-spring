@@ -32,6 +32,9 @@ public class LoginInterceptor implements HandlerInterceptor {
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    response.setHeader("Content-Type", "application/json; charset=utf-8");
     if(request.getContextPath() == "/account") {
       return true;
     }
