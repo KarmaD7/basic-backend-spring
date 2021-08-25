@@ -31,11 +31,10 @@ public class UserService {
   public RegisterStatus createUser(String name, String email, String pwd) {
     User user = new User(name, email, pwd);
     User userByName = userDao.findByName(name).orElse(null);
-    System.out.println("debug: by name " + name);
     if (userByName != null) {
       return RegisterStatus.duplicated_name;
     }    
-    User userByEmail = userDao.findByName(email).orElse(null);
+    User userByEmail = userDao.findByEmail(email).orElse(null);
     if (userByEmail != null) {
       return RegisterStatus.duplicated_email;
     }    
