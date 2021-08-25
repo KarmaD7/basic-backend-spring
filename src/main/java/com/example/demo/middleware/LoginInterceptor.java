@@ -1,18 +1,12 @@
 package com.example.demo.middleware;
 
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
 
-import javax.annotation.Resource;
-import javax.security.auth.message.AuthException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.StyledEditorKit.BoldAction;
 
-import com.example.demo.model.User;
 import com.example.demo.service.UserService;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Charsets;
@@ -24,13 +18,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
-
-  @Autowired
-  private UserService userService;
-
-  @Autowired
-  private ObjectMapper mapper;
-
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
     response.setHeader("Access-Control-Allow-Origin", "*");

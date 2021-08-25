@@ -125,8 +125,16 @@ public class UserController {
 
   @ResponseBody
   @PostMapping("/changepassword")
-  public ObjectNode changePassword(@RequestParam("id") int id, String oldpwd, String newpwd) {
+  public ObjectNode changePassword(HttpServletResponse response, @RequestBody ObjectNode req, @RequestParam("id") int id) {
+    var _oldpwd = req.get("original");
+    var _newpwd = req.get("updated");
     ObjectNode json = mapper.createObjectNode();
+    if (_oldpwd == null || _newpwd == null) {
+      response.setStatus(400);
+      return json;
+    }
+    String oldpwd = _oldpwd.asText();
+    String newpwd = _newpwd.asText();
     final String pwdPattern = "[A-Fa-f0-9]{64}";
     if (Pattern.matches(pwdPattern, newpwd) != true) {
       json.put("success", false);
