@@ -1,8 +1,10 @@
 package com.example.demo.api;
 
+import com.example.demo.service.EduService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,29 +14,35 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/edu")
 @Controller
 public class EduController {
-  static final String id = "83eba5d1-8ea8-4874-9b7f-ccffab47d897";
+  
+  @Autowired
+  private EduService eduService;
   
   @GetMapping("search")
   @ResponseBody
   public ObjectNode search() {
+    String id = eduService.getId();
     return null;
   }
 
   @GetMapping("entity")
   @ResponseBody
   public ObjectNode getEntityInfo() {
+    String id = eduService.getId();
     return null;
   }
 
   @GetMapping("exercise")
   @ResponseBody
   public ObjectNode getExercise() {
+    String id = eduService.getId();
     return null;
   }
 
   @GetMapping("find")
   @ResponseBody
   public ObjectNode findKnowledge() {
+    String id = eduService.getId();
     return null;
   }
 
@@ -43,6 +51,7 @@ public class EduController {
   @ResponseBody
   @PostMapping("qa")
   public ObjectNode questionAnswer() {
+    String id = eduService.getId();
     return null;
   }
 
