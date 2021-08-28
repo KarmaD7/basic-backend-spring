@@ -31,10 +31,15 @@ public class EduService {
       ResponseEntity<String> res = restTemplate.postForEntity(url, json, String.class);
       String resBody = res.getBody();
       JsonNode resJson =  mapper.readTree(resBody);
+      System.out.println(resJson.get("id").toString());
       return resJson.get("id").toString();
     } catch (Exception e) {
       System.out.println(e);
       return null;
     }
+  }
+  public String sendGetRequest(final String url) {
+    RestTemplate restTemplate = new RestTemplate();
+    return restTemplate.getForEntity(url, String.class).getBody();
   }
 }
