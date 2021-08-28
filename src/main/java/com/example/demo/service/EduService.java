@@ -42,4 +42,10 @@ public class EduService {
     RestTemplate restTemplate = new RestTemplate();
     return restTemplate.getForEntity(url, String.class).getBody();
   }
+  public String sendPostRequest(final String url, ObjectNode json) {
+    RestTemplate restTemplate = new RestTemplate();
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    return restTemplate.postForEntity(url, json, String.class).toString();
+  }
 }
