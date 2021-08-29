@@ -1,5 +1,8 @@
 package com.example.demo.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletResponse;
 
 import com.example.demo.service.EduService;
@@ -9,6 +12,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,13 +66,14 @@ public class EduController {
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode json = mapper.createObjectNode();
       json.put("message", "Bad Request");
-      return json.toString();
+      return json.asText();
     }
-    ObjectNode json = new ObjectMapper().createObjectNode();
-    json.put("context", _text.toString());
-    json.put("course", _course.toString());
-    json.put("id", id);
-    return eduService.sendPostRequest(url, json)ll;
+    // ObjectNode json = new ObjectMapper().createObjectNode();
+    MultiValueMap<String, Object> json = new LinkedMultiValueMap<String, Object>();
+    json.add("context", _text.asText());
+    json.add("course", _course.asText());
+    json.add("id", id);
+    return eduService.sendPostRequest(url, json);
   }
 
   @ResponseBody
@@ -81,14 +87,15 @@ public class EduController {
       ObjectMapper mapper = new ObjectMapper();
       ObjectNode json = mapper.createObjectNode();
       json.put("message", "Bad Request");
-      return json.toString();
+      return json.asText();
     }
-    String question = _question.toString();
-    String course = _course.toString();
-    ObjectNode json = new ObjectMapper().createObjectNode();
-    json.put("inputQuestion", question);
-    json.put("course", course);
-    json.put("id", id);
+    String question = _question.asText();
+    String course = _course.asText();
+    // ObjectNode json = new ObjectMapper().createObjectNode();
+    MultiValueMap<String, Object> json = new LinkedMultiValueMap<String, Object>();
+    json.add("inputQuestion", question);
+    json.add("course", course);
+    json.add("id", id);
     return eduService.sendPostRequest(url, json);
   }
 }
