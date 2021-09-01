@@ -1,5 +1,5 @@
 package com.example.demo.utils;
 
-public class EduConnection {
+public class BadRequest {
   
 }

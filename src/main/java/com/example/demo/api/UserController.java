@@ -131,6 +131,7 @@ public class UserController {
     ObjectNode json = mapper.createObjectNode();
     if (_oldpwd == null || _newpwd == null) {
       response.setStatus(400);
+      json.put("message", "Bad Request");
       return json;
     }
     String oldpwd = _oldpwd.asText();
