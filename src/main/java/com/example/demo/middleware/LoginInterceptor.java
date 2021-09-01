@@ -23,7 +23,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Headers", "Content-Type");
     response.setHeader("Content-Type", "application/json; charset=utf-8");
-    if (request.getRequestURI().equals("/account") || request.getRequestURI().equals("/error")) {
+    if (request.getRequestURI().equals("/account") || request.getRequestURI().equals("/edu")) {
       return true;
     }
     try {
