@@ -25,33 +25,5 @@ import org.springframework.web.servlet.RequestToViewNameTranslator;
 
 @Service
 public class EduService {
-  public String getId() {
-    RestTemplate restTemplate = new RestTemplate();
-    String url = "http://open.edukg.cn/opedukg/api/typeAuth/user/login";
-    HttpHeaders header = new HttpHeaders();
-    header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-    ObjectMapper mapper = new ObjectMapper();
-    try {
-      JsonNode json = mapper.readTree(new File("src/main/resources/secrets.json"));
-      ResponseEntity<String> res = restTemplate.postForEntity(url, json, String.class);
-      String resBody = res.getBody();
-      JsonNode resJson =  mapper.readTree(resBody);
-      System.out.println(resJson.get("id").asText());
-      return resJson.get("id").asText();
-    } catch (Exception e) {
-      System.out.println(e);
-      return null;
-    }
-  }
-  public String sendGetRequest(final String url) {
-    RestTemplate restTemplate = new RestTemplate();
-    return restTemplate.getForEntity(url, String.class).getBody();
-  }
-  public String sendPostRequest(final String url, MultiValueMap<String, Object> json) {
-    RestTemplate restTemplate = new RestTemplate();
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-    HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(json, headers);
-    return restTemplate.postForEntity(url, request, String.class).getBody();
-  }
+
 }
