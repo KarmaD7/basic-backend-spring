@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.print.attribute.standard.Media;
 
+import com.example.demo.dao.EduRepository;
+import com.example.demo.model.EduEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,5 +27,18 @@ import org.springframework.web.servlet.RequestToViewNameTranslator;
 
 @Service
 public class EduService {
+  @Autowired
+  private EduRepository eduDao;
 
+  public EduEntity getEduEntityByUri(String uri) {
+    return eduDao.findByUri(uri).orElse(null);
+  }
+
+  public EduEntity getEduEntityByCourseAndName(String course, String name) {
+    return eduDao.findByCourseAndEntityname(course, name).orElse(null);
+  }
+  
+  public void saveEduEntity(EduEntity entity) {
+    eduDao.save(entity);
+  }
 }

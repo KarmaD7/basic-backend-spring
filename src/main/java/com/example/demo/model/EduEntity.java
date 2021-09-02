@@ -6,10 +6,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "Edu")
-public class Edu {
+@Table(name = "EduEntity", uniqueConstraints = @UniqueConstraint(
+  columnNames = {"course, entityname"}
+))
+public class EduEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
@@ -20,14 +23,14 @@ public class Edu {
   @Column(name = "entityname", nullable = false)
   private String entityName;
 
-  @Column(name = "uri", nullable = true)
+  @Column(name = "uri", unique = true, nullable = true)
   private String uri; // uri for entity, id for exercise
 
-  public Edu() {
+  public EduEntity() {
 
   }
 
-  public Edu(String course, String entityName, String uri) {
+  public EduEntity(String course, String entityName, String uri) {
     this.course = course;
     this.entityName = entityName;
     this.uri = uri;

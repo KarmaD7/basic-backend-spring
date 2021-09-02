@@ -53,6 +53,7 @@ public class EduController {
   public String getExercise(@RequestParam("name") String name) {
     String id = EdukgConnection.getId();
     String url = "http://open.edukg.cn/opedukg/api/typeOpen/open/questionListByUriName?uriName=" + name + "&id=" + id;
+    // to do: exercise text format; save in db
     return EdukgConnection.sendGetRequest(url);
   }
 
