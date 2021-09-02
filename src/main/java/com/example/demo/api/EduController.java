@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.example.demo.model.EduEntity;
 import com.example.demo.service.EduService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,7 +46,17 @@ public class EduController {
   public String getEntityInfo(@RequestParam("course") String course, @RequestParam("name") String name) {
     String id = EdukgConnection.getId();
     String url = "http://open.edukg.cn/opedukg/api/typeOpen/open/infoByInstanceName?course=" + course + "&name=" + name + "&id=" + id;
-    return EdukgConnection.sendGetRequest(url);
+    String strResult = EdukgConnection.sendGetRequest(url);
+    try {
+      JsonNode data = new ObjectMapper().readTree(strResult).get("data");
+      String uri = data.get("uri").asText();
+      if (!uri.equals("")) {
+        eduService.saveEduEntity(new EduEntity(course, name, uri));
+      }
+    } catch (Exception e) {
+      System.out.println("error when saving entity to db: " + e);
+    }
+    return strResult;
   }
 
   @GetMapping("exercise")

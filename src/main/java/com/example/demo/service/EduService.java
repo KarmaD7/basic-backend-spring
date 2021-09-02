@@ -35,7 +35,7 @@ public class EduService {
   }
 
   public EduEntity getEduEntityByCourseAndName(String course, String name) {
-    return eduDao.findByCourseAndEntityname(course, name).orElse(null);
+    return eduDao.findByCourseAndEntityName(course, name).orElse(null);
   }
   
   public void saveEduEntity(EduEntity entity) {

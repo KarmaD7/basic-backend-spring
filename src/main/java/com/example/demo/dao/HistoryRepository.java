@@ -1,9 +1,9 @@
-package com.example.demo.dao;
+// package com.example.demo.dao;
 
-import com.example.demo.model.History;
+// import com.example.demo.model.History;
 
-import org.springframework.data.repository.CrudRepository;
+// import org.springframework.data.repository.CrudRepository;
 
-public interface HistoryRepository extends CrudRepository<History, Integer> {
+// public interface HistoryRepository extends CrudRepository<History, Integer> {
   
-}
+// }

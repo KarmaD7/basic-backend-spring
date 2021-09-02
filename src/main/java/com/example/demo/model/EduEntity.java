@@ -9,9 +9,10 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "EduEntity", uniqueConstraints = @UniqueConstraint(
-  columnNames = {"course, entityname"}
-))
+@Table(name = "EduEntity"
+/*, uniqueConstraints = @UniqueConstraint(
+  columnNames = {"course, entity_name"}
+)*/)
 public class EduEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,7 +21,7 @@ public class EduEntity {
   @Column(name = "course", nullable = false)
   private String course;
 
-  @Column(name = "entityname", nullable = false)
+  @Column(name = "entity_name", nullable = false)
   private String entityName;
 
   @Column(name = "uri", unique = true, nullable = true)
