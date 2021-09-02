@@ -17,8 +17,8 @@ public class Edu {
   @Column(name = "course", nullable = false)
   private String course;
 
-  @Column(name = "entity_name", nullable = false)
-  private String entity_name;
+  @Column(name = "entityname", nullable = false)
+  private String entityName;
 
   @Column(name = "uri", nullable = true)
   private String uri; // uri for entity, id for exercise
@@ -27,9 +27,9 @@ public class Edu {
 
   }
 
-  public Edu(String course, String entity_name, String uri) {
+  public Edu(String course, String entityName, String uri) {
     this.course = course;
-    this.entity_name = entity_name;
+    this.entityName = entityName;
     this.uri = uri;
   }
 
@@ -42,7 +42,7 @@ public class Edu {
   }
 
   public String getName() {
-    return this.entity_name;
+    return this.entityName;
   }
 
   public String getUri() {
@@ -58,7 +58,7 @@ public class Edu {
   }
 
   public void setName(String name) {
-    this.entity_name = name;
+    this.entityName = name;
   }
 
   public void setUri(String uri) {
