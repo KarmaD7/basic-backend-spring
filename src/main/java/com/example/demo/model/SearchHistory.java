@@ -47,4 +47,12 @@ public class SearchHistory {
   public void setContent(String searchContent) {
     this.searchContent = searchContent;
   }
+
+  public User getUser() {
+    return this.user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
 }
