@@ -3,7 +3,6 @@ package com.example.demo.api;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.StyledEditorKit.BoldAction;
 
 import com.example.demo.service.HistoryService;
 import com.example.demo.utils.BadRequest;
@@ -47,10 +46,10 @@ public class HistoryController {
     return null;
   }
 
-  @GetMapping("search/save")
+  @GetMapping("search/get")
   @ResponseBody
   @ResponseStatus(HttpStatus.OK)
-  public ObjectNode getSearchHistoryForUser(@RequestParam("id") String id) {
+  public ObjectNode getSearchHistoryForUser(@RequestParam("id") String id, @RequestParam(name = "number", defaultValue = "10") Integer number) {
     ObjectNode json = new ObjectMapper().createObjectNode();
     // int uid;
     // try {
@@ -69,18 +68,18 @@ public class HistoryController {
     return json;
   }
 
-  @GetMapping("search/get")
+  @GetMapping("search/save")
   @ResponseBody
-  public String putSearchHistory(HttpServletResponse response, @RequestBody ObjectNode request, @RequestParam("id") String id) {
+  public ObjectNode putSearchHistory(@RequestParam("id") String id, @RequestParam("key") String key) {
     ObjectNode json = new ObjectMapper().createObjectNode();
-    JsonNode _key = request.get("key");
-    if (_key == null) {
-      response.setStatus(400);
-      return BadRequest.badRequest;
-    }
-    String key = _key.asText();
+    // JsonNode _key = request.get("key");
+    // if (_key == null) {
+    //   response.setStatus(400);
+    //   return BadRequest.badRequest;
+    // }
+    // String key = _key.asText();
     boolean success = historyService.addSearchHistory(Integer.parseInt(id), key);
     json.put("success", success);
-    return json.asText();
+    return json;
   }
 }

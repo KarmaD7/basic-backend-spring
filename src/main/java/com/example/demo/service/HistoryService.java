@@ -40,7 +40,25 @@ public class HistoryService {
       return false;
     }
     searchHistory.setUser(user);
+    searchHistory.setContent(content);
+    System.out.println(searchHistory.getContent());
     historyDao.save(searchHistory);
     return true;
+  }
+  public List<String> getVisitEntityHistory(Integer uid) {
+    List<SearchHistory> historyList = historyDao.findByUser_Uid(uid).orElse(null);
+    if (historyList == null) {
+      return null;
+    }
+    List<String> historyAsStr = historyList.stream().map(SearchHistory::getContent).collect(Collectors.toList());
+    return historyAsStr;
+  }
+  public List<String> getVisitExerciseHistory(Integer uid) {
+    List<SearchHistory> historyList = historyDao.findByUser_Uid(uid).orElse(null);
+    if (historyList == null) {
+      return null;
+    }
+    List<String> historyAsStr = historyList.stream().map(SearchHistory::getContent).collect(Collectors.toList());
+    return historyAsStr;
   }
 }
