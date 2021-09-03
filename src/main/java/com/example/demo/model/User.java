@@ -84,5 +84,5 @@ public class User {
 
   @JsonIgnore
   @OneToMany(mappedBy = "user")
-  private Set<EduEntity> searchEntity;
+  private Set<SearchHistory> searchEntity;
 }
