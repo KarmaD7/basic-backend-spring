@@ -1,8 +1,5 @@
 package com.example.demo.utils;
 
 public enum RegisterStatus {
-  success,
-  duplicated_name,
-  duplicated_email,
-  unknown_error
+  success, duplicated_name, duplicated_phone, unknown_error
 }

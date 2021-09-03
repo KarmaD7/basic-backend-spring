@@ -20,25 +20,25 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User {
   @Id
   @Column(name = "uid", unique = true, nullable = false)
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer uid;
 
   @Column(name = "name", unique = true, nullable = false)
   private String name;
-  
-  @Column(name = "email", unique = true, nullable = false)
-  private String email;
-  
+
+  @Column(name = "phone", unique = true, nullable = false)
+  private String phone;
+
   @Column(name = "password", nullable = false)
   private String password;
 
   public User() {
-    
+
   }
 
-  public User(String name, String email, String pwd) {
+  public User(String name, String phone, String pwd) {
     this.name = name;
-    this.email = email;
+    this.phone = phone;
     this.password = pwd;
   }
 
@@ -58,12 +58,12 @@ public class User {
     this.name = name;
   }
 
-  public String getEmail() {
-    return email;
+  public String getPhone() {
+    return phone;
   }
 
-  public void setEmail(String email) {
-    this.email = email;
+  public void setPhone(String phone) {
+    this.phone = phone;
   }
 
   public String getPassword() {
@@ -75,11 +75,11 @@ public class User {
   }
 
   @ManyToMany
-  @JoinTable(name = "user_visit_entity", joinColumns = @JoinColumn(name="uid"), inverseJoinColumns = @JoinColumn(name="uri"))
+  @JoinTable(name = "user_visit_entity", joinColumns = @JoinColumn(name = "uid"), inverseJoinColumns = @JoinColumn(name = "uri"))
   private Set<EduEntity> visitEntity;
 
   @ManyToMany
-  @JoinTable(name = "user_collect_entity", joinColumns = @JoinColumn(name="uid"), inverseJoinColumns = @JoinColumn(name="uri"))
+  @JoinTable(name = "user_collect_entity", joinColumns = @JoinColumn(name = "uid"), inverseJoinColumns = @JoinColumn(name = "uri"))
   private Set<EduEntity> collectEntity;
 
   @JsonIgnore

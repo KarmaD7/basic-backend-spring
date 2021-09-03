@@ -12,9 +12,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Integer>  {
+public interface UserRepository extends CrudRepository<User, Integer> {
   Optional<User> findByName(String name);
-  Optional<User> findByEmail(String email);
+
+  Optional<User> findByPhone(String phone);
 
   @Transactional
   @Modifying
