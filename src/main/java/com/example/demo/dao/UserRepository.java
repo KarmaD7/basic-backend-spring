@@ -18,6 +18,6 @@ public interface UserRepository extends CrudRepository<User, Integer>  {
 
   @Transactional
   @Modifying
-  @Query("update User u set u.password = ?2 where u.id = ?1")
+  @Query("update User u set u.password = ?2 where u.uid = ?1")
   void setUserPassword(Integer id, String newpwd);
 }

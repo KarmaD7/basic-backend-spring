@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,7 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity // This tells Hibernate to make a table out of this class
 @Table(name = "User")
@@ -16,7 +21,7 @@ public class User {
   @Id
   @Column(name = "uid", unique = true, nullable = false)
   @GeneratedValue(strategy=GenerationType.AUTO)
-  private Integer id;
+  private Integer uid;
 
   @Column(name = "name", unique = true, nullable = false)
   private String name;
@@ -38,11 +43,11 @@ public class User {
   }
 
   public Integer getId() {
-    return id;
+    return uid;
   }
 
   public void setId(Integer id) {
-    this.id = id;
+    this.uid = id;
   }
 
   public String getName() {
@@ -69,6 +74,15 @@ public class User {
     this.password = password;
   }
 
-  // @ManyToMany
-  // @JoinTable(name = "user_records", joinColumns = @JoinColumn(name="id"))
+  @ManyToMany
+  @JoinTable(name = "user_visit_entity", joinColumns = @JoinColumn(name="uid"), inverseJoinColumns = @JoinColumn(name="uri"))
+  private Set<EduEntity> visitEntity;
+
+  @ManyToMany
+  @JoinTable(name = "user_collect_entity", joinColumns = @JoinColumn(name="uid"), inverseJoinColumns = @JoinColumn(name="uri"))
+  private Set<EduEntity> collectEntity;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "user")
+  private Set<EduEntity> searchEntity;
 }

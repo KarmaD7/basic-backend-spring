@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -17,6 +19,10 @@ public class SearchHistory {
 
   @Column(name = "search_content")
   private String searchContent;
+
+  @ManyToOne
+  @JoinColumn(name = "uid", nullable = false)
+  private User user;
 
   public SearchHistory() {
 
