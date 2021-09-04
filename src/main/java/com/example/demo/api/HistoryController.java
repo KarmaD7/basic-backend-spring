@@ -4,12 +4,15 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.example.demo.model.EduEntity;
 import com.example.demo.service.HistoryService;
 import com.example.demo.utils.BadRequest;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Utf8;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,14 +33,32 @@ public class HistoryController {
 
   @GetMapping("visit")
   @ResponseBody
-  public String getVisitHistoryForUser(@RequestParam("id") String id) {
-    return null;
+  public ObjectNode getVisitHistoryForUser(@RequestParam("id") String id) {
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode json = mapper.createObjectNode();
+    List<EduEntity> history = historyService.getVisitEntityHistory(Integer.parseInt(id));  
+    json.put("success", true);
+    ArrayNode arrayNode = json.putArray("history");
+    for (EduEntity item: history) {
+      JsonNode itemJson = mapper.convertValue(item.toMap(), JsonNode.class);
+      arrayNode.add(itemJson);
+    }
+    return json;
   }
 
   @PostMapping("visit/entity")
   @ResponseBody
   public String visitEntity(HttpServletResponse response, @RequestBody ObjectNode request, @RequestParam("id") String id) {
-    return null;
+    ObjectNode json = new ObjectMapper().createObjectNode();
+    JsonNode _uri = request.get("uri");
+    if (_uri == null) {
+      response.setStatus(400);
+      return BadRequest.badRequest;
+    }
+    String uri = _uri.asText();
+    boolean success = historyService.addVisitEntityHistory(Integer.parseInt(id), uri);
+    json.put("success", success);
+    return json.toString();
   }
 
   @PostMapping("visit/exercise")

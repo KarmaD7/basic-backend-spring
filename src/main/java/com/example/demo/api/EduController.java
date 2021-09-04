@@ -47,7 +47,7 @@ public class EduController {
       JsonNode data = new ObjectMapper().readTree(strResult).get("data");
       String uri = data.get("uri").asText();
       if (!uri.equals("")) {
-        eduService.saveEduEntity(new EduEntity(course, name, uri));
+        eduService.saveEduEntity(new EduEntity(course, name, uri, true));
       }
     } catch (Exception e) {
       System.out.println("error when saving entity to db: " + e);

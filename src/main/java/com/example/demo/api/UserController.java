@@ -47,10 +47,10 @@ public class UserController {
     final String phonePattern = "^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$";
     final String pwdPattern = "[A-Fa-f0-9]{64}";
     Integer mode; // 0 for name, 1 for phone
-    if (Pattern.matches(namePattern, nameOrPhone) == true) {
-      mode = 0;
-    } else if (Pattern.matches(phonePattern, nameOrPhone) == true) {
+    if (Pattern.matches(phonePattern, nameOrPhone) == true) {
       mode = 1;
+    } else if (Pattern.matches(namePattern, nameOrPhone) == true) {
+      mode = 0;
     } else {
       json.put("success", false);
       json.put("message", "invalid name or phone");

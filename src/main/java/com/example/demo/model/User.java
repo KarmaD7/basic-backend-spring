@@ -75,11 +75,11 @@ public class User {
   }
 
   @ManyToMany
-  @JoinTable(name = "user_visit_entity", joinColumns = @JoinColumn(name = "uid"), inverseJoinColumns = @JoinColumn(name = "uri"))
+  @JoinTable(name = "user_visit_entity", joinColumns = @JoinColumn(name = "uid"), inverseJoinColumns = @JoinColumn(name = "eid"))
   private Set<EduEntity> visitEntity;
 
   @ManyToMany
-  @JoinTable(name = "user_collect_entity", joinColumns = @JoinColumn(name = "uid"), inverseJoinColumns = @JoinColumn(name = "uri"))
+  @JoinTable(name = "user_collect_entity", joinColumns = @JoinColumn(name = "uid"), inverseJoinColumns = @JoinColumn(name = "eid"))
   private Set<EduEntity> collectEntity;
 
   @JsonIgnore

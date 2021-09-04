@@ -3,6 +3,8 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import com.example.demo.dao.EduRepository;
 import com.example.demo.dao.SearchHistoryRepository;
 import com.example.demo.dao.UserRepository;
@@ -11,6 +13,8 @@ import com.example.demo.model.SearchHistory;
 import com.example.demo.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,24 +45,25 @@ public class HistoryService {
     }
     searchHistory.setUser(user);
     searchHistory.setContent(content);
-    System.out.println(searchHistory.getContent());
     historyDao.save(searchHistory);
     return true;
   }
-  public List<String> getVisitEntityHistory(Integer uid) {
-    List<SearchHistory> historyList = historyDao.findByUser_Uid(uid).orElse(null);
+  public List<EduEntity> getVisitEntityHistory(Integer uid) {
+    List<EduEntity> historyList = eduDao.findByVisitUser_Uid(uid).orElse(null);
     if (historyList == null) {
+      System.out.println("null history.");
       return null;
     }
-    List<String> historyAsStr = historyList.stream().map(SearchHistory::getContent).collect(Collectors.toList());
-    return historyAsStr;
+    return historyList;
   }
-  public List<String> getVisitExerciseHistory(Integer uid) {
-    List<SearchHistory> historyList = historyDao.findByUser_Uid(uid).orElse(null);
-    if (historyList == null) {
-      return null;
+
+  public boolean addVisitEntityHistory(Integer uid, String uri) {
+    try {
+      eduDao.setVisitHistory(uid, uri);
+    } catch (Exception e) {
+      System.out.println(e);
+      return false;
     }
-    List<String> historyAsStr = historyList.stream().map(SearchHistory::getContent).collect(Collectors.toList());
-    return historyAsStr;
+    return true;
   }
 }
