@@ -7,12 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.example.demo.model.EduEntity;
 import com.example.demo.service.HistoryService;
 import com.example.demo.utils.BadRequest;
-import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Utf8;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,6 +63,7 @@ public class HistoryController {
   @ResponseBody
   public String visitExercise(HttpServletResponse response, @RequestBody ObjectNode request, @RequestParam("id") String id) {
     return null;
+    // to do(may)
   }
 
   @GetMapping("search/get")
