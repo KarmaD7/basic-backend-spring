@@ -16,36 +16,40 @@ public class UserService {
     this.userDao = userDao;
   }
 
-  public User getUser(String nameOrEmail, String pwd, int mode) {
+  public User getUser(String nameOrPhone, String pwd, int mode) {
     User user;
     if (mode == 0) {
-      user = userDao.findByName(nameOrEmail).orElse(null);
+      user = userDao.findByName(nameOrPhone).orElse(null);
     } else {
-      user = userDao.findByEmail(nameOrEmail).orElse(null);
+      user = userDao.findByPhone(nameOrPhone).orElse(null);
     }
     if (user == null || !user.getPassword().equals(pwd)) {
       return null;
     }
     return user;
   }
-  public RegisterStatus createUser(String name, String email, String pwd) {
-    User user = new User(name, email, pwd);
+
+  public RegisterStatus createUser(String name, String phone, String pwd) {
+    User user = new User(name, phone, pwd);
     User userByName = userDao.findByName(name).orElse(null);
     if (userByName != null) {
       return RegisterStatus.duplicated_name;
-    }    
-    User userByEmail = userDao.findByEmail(email).orElse(null);
-    if (userByEmail != null) {
-      return RegisterStatus.duplicated_email;
-    }    
+    }
+    User userByPhone = userDao.findByPhone(phone).orElse(null);
+    if (userByPhone != null) {
+      return RegisterStatus.duplicated_phone;
+    }
     userDao.save(user);
     return RegisterStatus.success;
   }
+
   public boolean changepassword(int id, String oldpwd, String newpwd) {
     User user = userDao.findById(id).orElse(null);
-    if (user == null) return false;
-    if (!user.getPassword().equals(oldpwd)) return false;
-    userDao.setUserPassword(id, newpwd);   
+    if (user == null)
+      return false;
+    if (!user.getPassword().equals(oldpwd))
+      return false;
+    userDao.setUserPassword(id, newpwd);
     return true;
   }
 

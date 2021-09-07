@@ -12,12 +12,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Integer>  {
+public interface UserRepository extends CrudRepository<User, Integer> {
   Optional<User> findByName(String name);
-  Optional<User> findByEmail(String email);
+
+  Optional<User> findByPhone(String phone);
 
   @Transactional
   @Modifying
-  @Query("update User u set u.password = ?2 where u.id = ?1")
+  @Query("update User u set u.password = ?2 where u.uid = ?1")
   void setUserPassword(Integer id, String newpwd);
 }

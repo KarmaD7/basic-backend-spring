@@ -1,10 +1,8 @@
 package com.example.demo.api;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
 
+import com.example.demo.model.EduEntity;
 import com.example.demo.service.EduService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
+import com.example.demo.utils.EdukgConnection;
 
 @RequestMapping("/edu")
 @Controller
@@ -33,32 +31,43 @@ public class EduController {
   @ResponseBody
 
   public String search(@RequestParam("course") String course, @RequestParam("key") String key) {
-    String id = eduService.getId();
+    String id = EdukgConnection.getId();
     String url = "http://open.edukg.cn/opedukg/api/typeOpen/open/instanceList?course=" + course + "&searchKey=" + key + "&id=" + id;
-    return eduService.sendGetRequest(url);
+    return EdukgConnection.sendGetRequest(url);
     // return null;
   }
 
   @GetMapping("entity")
   @ResponseBody
   public String getEntityInfo(@RequestParam("course") String course, @RequestParam("name") String name) {
-    String id = eduService.getId();
+    String id = EdukgConnection.getId();
     String url = "http://open.edukg.cn/opedukg/api/typeOpen/open/infoByInstanceName?course=" + course + "&name=" + name + "&id=" + id;
-    return eduService.sendGetRequest(url);
+    String strResult = EdukgConnection.sendGetRequest(url);
+    try {
+      JsonNode data = new ObjectMapper().readTree(strResult).get("data");
+      String uri = data.get("uri").asText();
+      if (!uri.equals("")) {
+        eduService.saveEduEntity(new EduEntity(course, name, uri, true));
+      }
+    } catch (Exception e) {
+      System.out.println("error when saving entity to db: " + e);
+    }
+    return strResult;
   }
 
   @GetMapping("exercise")
   @ResponseBody
   public String getExercise(@RequestParam("name") String name) {
-    String id = eduService.getId();
+    String id = EdukgConnection.getId();
     String url = "http://open.edukg.cn/opedukg/api/typeOpen/open/questionListByUriName?uriName=" + name + "&id=" + id;
-    return eduService.sendGetRequest(url);
+    // to do: exercise text format; save in db
+    return EdukgConnection.sendGetRequest(url);
   }
 
   @PostMapping("find")
   @ResponseBody
   public String findKnowledge(HttpServletResponse res, @RequestBody ObjectNode req) {
-    String id = eduService.getId();
+    String id = EdukgConnection.getId();
     String url = "http://open.edukg.cn/opedukg/api/typeOpen/open/linkInstance";
     JsonNode _text = req.get("text"); JsonNode _course = req.get("course");
     if (_text == null || _course == null) {
@@ -73,13 +82,13 @@ public class EduController {
     json.add("context", _text.asText());
     json.add("course", _course.asText());
     json.add("id", id);
-    return eduService.sendPostRequest(url, json);
+    return EdukgConnection.sendPostRequest(url, json);
   }
 
   @ResponseBody
   @PostMapping("qa")
   public String questionAnswer(HttpServletResponse res, @RequestBody ObjectNode req) {
-    String id = eduService.getId();
+    String id = EdukgConnection.getId();
     String url = "http://open.edukg.cn/opedukg/api/typeOpen/open/inputQuestion";
     JsonNode _question = req.get("question"); JsonNode _course = req.get("course");
     if (_question == null || _course == null) {
@@ -96,7 +105,7 @@ public class EduController {
     json.add("inputQuestion", question);
     json.add("course", course);
     json.add("id", id);
-    return eduService.sendPostRequest(url, json);
+    return EdukgConnection.sendPostRequest(url, json);
   }
 }
 
