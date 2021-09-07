@@ -4,9 +4,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.example.demo.model.EduEntity;
 import com.example.demo.service.EduService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.cache.Cache;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.utils.EdukgConnection;
+import com.example.demo.utils.ExerciseFormatter;
 
 @RequestMapping("/edu")
 @Controller
@@ -61,7 +65,32 @@ public class EduController {
     String id = EdukgConnection.getId();
     String url = "http://open.edukg.cn/opedukg/api/typeOpen/open/questionListByUriName?uriName=" + name + "&id=" + id;
     // to do: exercise text format; save in db
-    return EdukgConnection.sendGetRequest(url);
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      JsonNode json = mapper.readTree(EdukgConnection.sendGetRequest(url));
+      JsonNode exercises = json.get("data");
+      ObjectNode jsonToReturn = mapper.createObjectNode();
+      ArrayNode exerciseArray = jsonToReturn.putArray("exercise");
+      System.out.println(exercises);
+      if (exercises.isArray()) {
+        System.out.println(true);
+        for (JsonNode node: exercises) {
+          System.out.println(node);
+          String question = node.get("qBody").asText();
+          ObjectNode questionJson = ExerciseFormatter.getFormattedChoiceExercise(question);
+          if (questionJson == null) continue;
+          questionJson.put("answer", node.get("qAnswer").asText());
+          exerciseArray.add(questionJson);
+        }
+        jsonToReturn.put("success", true);
+      } else {
+        jsonToReturn.put("success", false);
+      }
+      return jsonToReturn.toString();
+    } catch (JsonProcessingException e) {
+      return null;
+    }
+    // ExerciseFormatter.getFormattedChoiceExercise(content);
   }
 
   @PostMapping("find")
