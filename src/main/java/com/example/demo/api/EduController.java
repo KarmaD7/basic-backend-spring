@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.example.demo.utils.BadRequest;
 import com.example.demo.utils.EdukgConnection;
 import com.example.demo.utils.ExerciseFormatter;
 
@@ -122,16 +124,33 @@ public class EduController {
     JsonNode _question = req.get("question"); JsonNode _course = req.get("course");
     if (_question == null || _course == null) {
       res.setStatus(400);
-      ObjectMapper mapper = new ObjectMapper();
-      ObjectNode json = mapper.createObjectNode();
-      json.put("message", "Bad Request");
-      return json.asText();
+      return BadRequest.badRequest;
     }
     String question = _question.asText();
     String course = _course.asText();
     // ObjectNode json = new ObjectMapper().createObjectNode();
     MultiValueMap<String, Object> json = new LinkedMultiValueMap<String, Object>();
     json.add("inputQuestion", question);
+    json.add("course", course);
+    json.add("id", id);
+    return EdukgConnection.sendPostRequest(url, json);
+  }
+
+  @ResponseBody
+  @PostMapping("related")
+  public String relatedSubject(HttpServletResponse res, @RequestBody ObjectNode req) {
+    String id = EdukgConnection.getId();
+    String url = "http://open.edukg.cn/opedukg/api/typeOpen/open/relatedsubject";
+    JsonNode _name = req.get("name"); JsonNode _course = req.get("course");
+    if (_name == null || _course == null) {
+      res.setStatus(400);
+      return BadRequest.badRequest;
+    }
+    String name = _name.asText();
+    String course = _course.asText();
+    // ObjectNode json = new ObjectMapper().createObjectNode();
+    MultiValueMap<String, Object> json = new LinkedMultiValueMap<String, Object>();
+    json.add("subjectName", name);
     json.add("course", course);
     json.add("id", id);
     return EdukgConnection.sendPostRequest(url, json);
