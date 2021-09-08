@@ -33,4 +33,9 @@ public interface EduRepository extends CrudRepository<EduEntity, Integer> {
   + " FROM user, edu_entity"
   + " WHERE user.uid = ?1 and edu_entity.uri = ?2", nativeQuery = true)
   public void setCollection(Integer uid, String uri);
+
+  @Transactional
+  @Modifying
+  @Query(value = "DELETE FROM user_collect_entity where uid = ?1 and eid = (select eid from edu_entity where uri = ?2)", nativeQuery = true)
+  public void deleteCollection(Integer uid, String uri);
 }
