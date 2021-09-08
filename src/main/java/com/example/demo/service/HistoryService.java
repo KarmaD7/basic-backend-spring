@@ -37,6 +37,15 @@ public class HistoryService {
     return historyAsStr;
   }
 
+  public List<String> getTopNSearchHistory(Integer uid, Integer number) {
+    List<SearchHistory> historyList = historyDao.findTopN(uid, number).orElse(null);
+    if (historyList == null) {
+      return null;
+    }
+    List<String> historyAsStr = historyList.stream().map(SearchHistory::getContent).collect(Collectors.toList());
+    return historyAsStr;
+  }
+
   public boolean addSearchHistory(Integer uid, String content) {
     SearchHistory searchHistory = new SearchHistory();
     User user = userDao.findById(uid).orElse(null);

@@ -69,7 +69,7 @@ public class HistoryController {
   @GetMapping("search/get")
   @ResponseBody
   @ResponseStatus(HttpStatus.OK)
-  public ObjectNode getSearchHistoryForUser(@RequestParam("id") String id, @RequestParam(name = "number", defaultValue = "10") Integer number) {
+  public ObjectNode getSearchHistoryForUser(@RequestParam("id") Integer id, @RequestParam(name = "number", defaultValue = "10") Integer number) {
     ObjectNode json = new ObjectMapper().createObjectNode();
     // int uid;
     // try {
@@ -78,7 +78,7 @@ public class HistoryController {
       
     // } 
     // cookie auth guarantees the id is valid.
-    List<String> history = historyService.getSearchHistory(Integer.parseInt(id));  
+    List<String> history = historyService.getTopNSearchHistory(id, number);  
     json.put("success", true);
     ArrayNode arrayNode = json.putArray("history");
     for (String item: history) {
