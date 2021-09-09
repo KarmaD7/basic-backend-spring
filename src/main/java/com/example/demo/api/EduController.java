@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.example.demo.model.EduEntity;
 import com.example.demo.service.EduService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -36,10 +37,29 @@ public class EduController {
   @GetMapping("search")
   @ResponseBody
 
-  public String search(@RequestParam("course") String course, @RequestParam("key") String key) {
+  public String search(@RequestParam("course") String course, @RequestParam("key") String key) throws JsonProcessingException, JsonMappingException {
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode json = mapper.createObjectNode();
+    ArrayNode courseData = json.putArray("result");
     String id = EdukgConnection.getId();
-    String url = "http://open.edukg.cn/opedukg/api/typeOpen/open/instanceList?course=" + course + "&searchKey=" + key + "&id=" + id;
-    return EdukgConnection.sendGetRequest(url);
+    String[] courses = course.split(",");
+    for (String selectedCourse: courses) {
+      System.out.println(selectedCourse);
+      String url = "http://open.edukg.cn/opedukg/api/typeOpen/open/instanceList?course=" + selectedCourse + "&searchKey=" + key + "&id=" + id;
+      String strRes = EdukgConnection.sendGetRequest(url);
+      JsonNode edukgRes = mapper.readTree(strRes);
+      ObjectNode res = mapper.createObjectNode();
+      if (Integer.parseInt(edukgRes.get("code").asText()) != 0) {
+        json.put("success", false);
+        json.put("message", "edukg has crashed");
+        return json.toString();
+      }
+      res.put("course", selectedCourse);
+      res.set("data", edukgRes.get("data"));
+      courseData.add(res);
+    }
+    json.put("success", true);;
+    return json.toString();
     // return null;
   }
 
