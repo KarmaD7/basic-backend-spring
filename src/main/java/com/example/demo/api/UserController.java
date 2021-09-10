@@ -69,6 +69,7 @@ public class UserController {
       json.put("message", "wrong name or password");
       return json;
     }
+    json.put("success", true);
     json.put("id", user.getId());
     json.put("name", user.getName());
     json.put("phone", user.getPhone());

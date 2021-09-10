@@ -37,12 +37,12 @@ public class LoginInterceptor implements HandlerInterceptor {
     
     LOGGER.info("params");
 
-    Map<String, String[]> paramMap = request.getParameterMap();
+    // Map<String, String[]> paramMap = request.getParameterMap();
 
     for (Map.Entry<String, String[]> item: request.getParameterMap().entrySet()) {
       LOGGER.info("{} : {}", item.getKey(), item.getValue());
     }
-    LOGGER.info("params : {}", Arrays.asList(joinP));
+    // LOGGER.info("params : {}", Arrays.asList(joinP));
 
     if (request.getRequestURI().equals("/account") || request.getRequestURI().equals("/edu")) {
       return true;

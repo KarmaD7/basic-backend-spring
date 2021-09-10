@@ -54,9 +54,9 @@ public class EduController {
         json.put("message", "edukg has crashed");
         return json.toString();
       }
-      res.put("course", selectedCourse);
-      res.set("data", edukgRes.get("data"));
-      courseData.add(res);
+      ObjectNode data = (ObjectNode)edukgRes.get("data");
+      data.put("course", selectedCourse);
+      courseData.add(data);
     }
     json.put("success", true);;
     return json.toString();
