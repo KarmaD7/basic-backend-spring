@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,9 +59,18 @@ public class CollectionController {
     return json.toString();
   }
 
-  @PostMapping("exercise")
+  @DeleteMapping("entity")
   @ResponseBody
-  public String collectExercise(HttpServletResponse response, @RequestBody ObjectNode request, @RequestParam("id") String id) {
-    return null;
+  public String collectExercise(HttpServletResponse response, @RequestBody ObjectNode request, @RequestParam("id") Integer id) {
+    ObjectNode json = new ObjectMapper().createObjectNode();
+    JsonNode _uri = request.get("uri");
+    if (_uri == null) {
+      response.setStatus(400);
+      return BadRequest.badRequest;
+    }
+    String uri = _uri.asText();
+    boolean success = collectionService.deleteCollection(id, uri);
+    json.put("success", success);
+    return json.toString();
   }
 }

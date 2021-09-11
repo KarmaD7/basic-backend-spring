@@ -43,4 +43,14 @@ public class CollectionService {
     }
     return true;
   }
+
+  public boolean deleteCollection(Integer uid, String uri) {
+    try {
+      eduDao.deleteCollection(uid, uri);
+    } catch (Exception e) {
+      System.out.println(e);
+      return false;
+    }
+    return true;
+  }
 }

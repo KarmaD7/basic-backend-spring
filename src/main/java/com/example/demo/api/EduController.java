@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.example.demo.model.EduEntity;
 import com.example.demo.service.EduService;
+import com.example.demo.service.HistoryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,6 +24,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import com.example.demo.utils.BadRequest;
 import com.example.demo.utils.EdukgConnection;
 import com.example.demo.utils.ExerciseFormatter;
@@ -33,6 +40,9 @@ public class EduController {
   
   @Autowired
   private EduService eduService;
+
+  @Autowired
+  private HistoryService historyService;
   
   @GetMapping("search")
   @ResponseBody
@@ -54,9 +64,14 @@ public class EduController {
         json.put("message", "edukg has crashed");
         return json.toString();
       }
-      ObjectNode data = (ObjectNode)edukgRes.get("data");
-      data.put("course", selectedCourse);
-      courseData.add(data);
+      JsonNode data = edukgRes.get("data");
+      if (data.isArray()) {
+        for (JsonNode node: data) {
+          ObjectNode onode = (ObjectNode)node;
+          onode.put("course", selectedCourse);
+          courseData.add(onode);
+        }
+      }
     }
     json.put("success", true);;
     return json.toString();
@@ -174,6 +189,63 @@ public class EduController {
     json.add("course", course);
     json.add("id", id);
     return EdukgConnection.sendPostRequest(url, json);
+  }
+
+  @ResponseBody
+  @GetMapping("recommend")
+  public String recommendExercises(@RequestParam("id") Integer id) {
+    ObjectMapper mapper = new ObjectMapper();
+    String url = "http://127.0.0.1:8888/recommend";
+    List<EduEntity> visitHistory = historyService.getVisitEntityHistory(id);
+    List<String> visitedName = visitHistory.stream().map(EduEntity::getName).collect(Collectors.toList());
+    List<String> toPassName = visitedName;
+    // MultiValueMap<String, Object> json = new LinkedMultiValueMap<String, Object>();
+    // json.add("entities", visitedName);
+    // System.out.println(json);
+    if (visitedName.size() > 5) {
+      toPassName = visitedName.subList(visitedName.size() - 5, visitedName.size());
+    }
+    try {
+      ObjectNode json = new ObjectMapper().createObjectNode();
+      ArrayNode entities = json.putArray("entities");
+      for (String name: toPassName) {
+        entities.add(name);
+      }
+      JsonNode returnedJson =  mapper.readTree(EdukgConnection.sendJsonPostRequest(url, json));
+      JsonNode recommendedEntities = returnedJson.get("result");
+      // List<String> entityAsStr = new ArrayList<>();
+      ArrayNode arrRes = (ArrayNode) recommendedEntities;
+      int sz = arrRes.size();
+      boolean[] used = new boolean[sz];
+      Random r = new Random();
+      while (true) {
+        int num = r.nextInt(sz);
+        if (used[num] == true) continue;
+        used[num] = true;
+        System.out.println(num);
+        String entity = arrRes.get(num).asText();
+        String strExercises = getExercise(entity);
+        JsonNode relatedExercises = mapper.readTree(strExercises);
+        ArrayNode exerciseArr = (ArrayNode) relatedExercises.get("exercise");
+        System.out.println(exerciseArr);
+        if (exerciseArr.size() == 0) {
+          continue;
+        } 
+        return strExercises;
+      }
+    } catch (Exception e) {
+      System.out.println(e);
+      return null;
+    }
+    // if (recommendedEntities.isArray()) {
+    //   for (JsonNode node: recommendedEntities) {
+    //     entityAsStr.add(node.asText());
+    //   }
+    // }
+    // System.out.println(entityAsStr);
+    // for 
+    // List
+    // this.getExercise(name);
   }
 }
 

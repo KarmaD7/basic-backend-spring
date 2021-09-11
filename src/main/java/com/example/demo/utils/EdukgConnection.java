@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -41,6 +42,16 @@ public class EdukgConnection {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(json, headers);
+    return restTemplate.postForEntity(url, request, String.class).getBody();
+  }
+  static public String sendJsonPostRequest(final String url, ObjectNode json) {
+    RestTemplate restTemplate = new RestTemplate();
+    HttpHeaders headers = new HttpHeaders();
+    MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+    headers.setContentType(type);
+    // headers.setContentType(MediaType.APPLICATION_JSON);
+    // headers.setCharset(MediaType.APPLICATION_JSON);
+    HttpEntity<String> request = new HttpEntity<>(json.toString(), headers);
     return restTemplate.postForEntity(url, request, String.class).getBody();
   }
 }
